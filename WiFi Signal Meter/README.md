@@ -22,28 +22,11 @@ strength of the WiFi network you're already connected to.
 
 Cloning the repo (rather than copying a tarball) lets the app pull the
 latest version from git every time it starts — see "Auto-update on
-startup" below. `RaspberryPiScience` is a private repo, so the Pi needs
-its own read-only access to it first:
+startup" below. `RaspberryPiScience` is public, so no GitHub
+credentials or deploy key are needed:
 
 ```bash
-ssh-keygen -t ed25519 -f ~/.ssh/raspberrypiscience_deploy -N ""
-cat >> ~/.ssh/config <<'EOF'
-
-Host github-raspberrypiscience
-    HostName github.com
-    User git
-    IdentityFile ~/.ssh/raspberrypiscience_deploy
-    IdentitiesOnly yes
-EOF
-cat ~/.ssh/raspberrypiscience_deploy.pub
-```
-
-Paste the printed public key into GitHub yourself: repo **Settings →
-Deploy keys → Add deploy key** (no need to tick "Allow write access").
-Then clone the repo using that alias:
-
-```bash
-git clone github-raspberrypiscience:BitSquire/RaspberryPiScience.git ~/RaspberryPiScience
+git clone https://github.com/BitSquire/RaspberryPiScience.git ~/RaspberryPiScience
 cd ~/RaspberryPiScience/"WiFi Signal Meter"
 ./install.sh
 ```
