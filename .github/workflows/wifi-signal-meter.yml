@@ -1,0 +1,39 @@
+name: WiFi Signal Meter build
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "WiFi Signal Meter/**"
+      - ".github/workflows/wifi-signal-meter.yml"
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "WiFi Signal Meter"
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Compile Python sources
+        run: python3 -m py_compile main.py gauge.py wifi_signal.py locations.py
+
+      - name: Check shell script syntax
+        run: |
+          bash -n run.sh
+          bash -n install.sh
+          bash -n package.sh
+
+      - name: Build release archive
+        run: ./package.sh
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wifi-signal-meter
+          path: "WiFi Signal Meter/wifi-signal-meter.tar.gz"
