@@ -105,6 +105,30 @@ Exec=$(pwd)/run.sh --fullscreen
 EOF
 ```
 
+## Desktop icon (optional)
+
+`install.sh` also offers to add a double-clickable icon to `~/Desktop`.
+To do it manually instead:
+
+```bash
+mkdir -p ~/Desktop
+cat > ~/Desktop/wifi-meter.desktop <<EOF
+[Desktop Entry]
+Type=Application
+Name=WiFi Signal Meter
+Comment=Touchscreen WiFi signal strength gauge
+Exec=$(pwd)/run.sh --fullscreen
+Icon=network-wireless
+Terminal=false
+EOF
+chmod +x ~/Desktop/wifi-meter.desktop
+gio set ~/Desktop/wifi-meter.desktop "metadata::trusted" true
+```
+
+That last `gio set` line marks it trusted — Raspberry Pi OS's file
+manager otherwise refuses to run a `.desktop` file on double-click
+until you do that (or right-click it and choose to trust/execute it).
+
 ## Files
 
 - `main.py` — application entry point, layout, and polling loop
