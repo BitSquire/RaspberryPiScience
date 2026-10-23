@@ -13,7 +13,9 @@ strength of the WiFi network you're already connected to.
   every second between samples.
 - Left-hand list always shows the live "Roaming" reading, plus any
   locations you've recorded (tap **Record Location**, name the spot) —
-  sorted alphabetically with the level at the time you recorded it.
+  numbered, sorted alphabetically. Each one also gets a small numbered
+  circle on the dial itself, at the position it was recorded, so you
+  can see at a glance where it falls relative to the live reading.
   Saved to `locations.json` next to the app, so it survives restarts.
 - An on-screen `✕` in the top-right corner exits fullscreen (tap again
   to quit) since a kiosk touchscreen has no keyboard.

@@ -52,6 +52,7 @@ class WifiMeterApp:
         )
         self.exit_button.bind("<Button-1>", self._on_exit_tap)
 
+        self._refresh_markers()
         self._poll()
         self._tick()
 
@@ -125,6 +126,7 @@ class WifiMeterApp:
         self.locations[name] = status.signal_percent
         save_locations(self.locations)
         self._refresh_list(status)
+        self._refresh_markers()
 
     def _poll(self):
         status = get_wifi_status(self.interface)
@@ -158,6 +160,9 @@ class WifiMeterApp:
         else:
             self.detail_label.config(text=f"No WiFi connection  |  {when}")
 
+    def _sorted_location_names(self):
+        return sorted(self.locations, key=str.lower)
+
     def _refresh_list(self, status):
         self.listbox.delete(0, tk.END)
 
@@ -168,9 +173,15 @@ class WifiMeterApp:
         self.listbox.insert(tk.END, roaming_text)
         self.listbox.itemconfig(0, fg=GREEN)
 
-        for name in sorted(self.locations, key=str.lower):
-            level = self.locations[name]
-            self.listbox.insert(tk.END, f"{name} — {level}%")
+        for i, name in enumerate(self._sorted_location_names(), start=1):
+            self.listbox.insert(tk.END, f"{i}. {name}")
+
+    def _refresh_markers(self):
+        markers = [
+            (i, self.locations[name])
+            for i, name in enumerate(self._sorted_location_names(), start=1)
+        ]
+        self.gauge.set_markers(markers)
 
 
 def main():

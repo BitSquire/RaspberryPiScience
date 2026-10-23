@@ -37,6 +37,8 @@ TOP_MARGIN = 20
 LABEL_MARGIN = 26  # extra space reserved for tick labels above the arc
 TEXT_AREA_HEIGHT = 100
 
+MARKER_RADIUS = 11
+
 
 def _value_to_angle(value: float) -> float:
     """Map a 0-100 gauge value to an angle in degrees (180 -> 0)."""
@@ -57,8 +59,10 @@ class SignalGauge(tk.Canvas):
 
         self._draw_static()
         self._needle = None
+        self._pivot = None
         self._value_text = None
         self._status_text = None
+        self._markers = []
         self.set_value(0, connected=False)
 
     def _band_extent(self, start_pct, end_pct):
@@ -119,11 +123,13 @@ class SignalGauge(tk.Canvas):
 
         if self._needle is not None:
             self.delete(self._needle)
+        if self._pivot is not None:
+            self.delete(self._pivot)
         needle_color = NEEDLE_COLOR if connected else GRAY
         self._needle = self.create_line(
             self.cx, self.cy, x, y, fill=needle_color, width=5, capstyle=tk.ROUND
         )
-        self.create_oval(
+        self._pivot = self.create_oval(
             self.cx - 9, self.cy - 9, self.cx + 9, self.cy + 9,
             fill=PIVOT_COLOR, outline=PIVOT_COLOR,
         )
@@ -145,6 +151,41 @@ class SignalGauge(tk.Canvas):
             self.cx, text_y + 34,
             text=status, fill=status_color, font=("DejaVu Sans", 14),
         )
+
+    def set_markers(self, markers):
+        """Draw small numbered circles on the ring for recorded locations.
+
+        markers: iterable of (number, percent) pairs.
+        """
+        for item in self._markers:
+            self.delete(item)
+        self._markers = []
+
+        thickness = self.radius * 0.32
+        ring_mid = self.radius - thickness / 2
+
+        for number, percent in markers:
+            display_value = _display_value(percent, True)
+            angle = math.radians(_value_to_angle(display_value))
+            mx = self.cx + ring_mid * math.cos(angle)
+            my = self.cy - ring_mid * math.sin(angle)
+
+            circle = self.create_oval(
+                mx - MARKER_RADIUS, my - MARKER_RADIUS,
+                mx + MARKER_RADIUS, my + MARKER_RADIUS,
+                fill=FACE_COLOR, outline=TEXT_COLOR, width=1.5,
+            )
+            label = self.create_text(
+                mx, my, text=str(number), fill=TEXT_COLOR,
+                font=("DejaVu Sans", 9, "bold"),
+            )
+            self._markers.extend([circle, label])
+
+        # keep the live needle/pivot visible above any marker it crosses
+        if self._needle is not None:
+            self.tag_raise(self._needle)
+        if self._pivot is not None:
+            self.tag_raise(self._pivot)
 
 
 def _display_value(percent, connected):
