@@ -221,3 +221,6 @@ __marimo__/
 
 # Built package archives
 *.tar.gz
+
+# WiFi Signal Meter: per-device recorded locations, not shared state
+WiFi Signal Meter/locations.json

@@ -23,10 +23,11 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
 [Desktop Entry]
 Type=Application
 Name=WiFi Signal Meter
-Exec=python3 "$SCRIPT_DIR/main.py" --fullscreen
+Exec=$SCRIPT_DIR/run.sh --fullscreen
 EOF
     echo "Autostart entry written to ~/.config/autostart/wifi-meter.desktop"
+    echo "(it runs via run.sh, which pulls the latest version first if this is a git checkout)"
 fi
 
 echo "Done. Run it now with:"
-echo "  python3 \"$SCRIPT_DIR/main.py\""
+echo "  \"$SCRIPT_DIR/run.sh\""

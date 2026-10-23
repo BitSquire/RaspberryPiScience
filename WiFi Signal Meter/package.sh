@@ -10,7 +10,8 @@ STAGE_DIR="$(mktemp -d)/$STAGE_NAME"
 
 mkdir -p "$STAGE_DIR"
 cp "$SCRIPT_DIR"/main.py "$SCRIPT_DIR"/gauge.py "$SCRIPT_DIR"/wifi_signal.py \
-   "$SCRIPT_DIR"/install.sh "$SCRIPT_DIR"/README.md "$STAGE_DIR/"
+   "$SCRIPT_DIR"/locations.py "$SCRIPT_DIR"/install.sh "$SCRIPT_DIR"/run.sh \
+   "$SCRIPT_DIR"/README.md "$STAGE_DIR/"
 
 tar -czf "$OUT_FILE" -C "$(dirname "$STAGE_DIR")" "$STAGE_NAME"
 rm -rf "$(dirname "$STAGE_DIR")"
